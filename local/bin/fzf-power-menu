@@ -1,19 +1,19 @@
 #! /usr/bin/env bash
 
 modes=(
-  "Sleep"
-  "Shutdown"
-  "Reboot"
-  "Exit Hyprland"
-  "Logout"
+  "󰒲 Sleep"
+  " Shutdown"
+  " Reboot"
+  "󰿅 Exit Hyprland"
+  " Logout"
 )
 
 option=$(printf "%s\n" "${modes[@]}" | fzf)
 
 case "$option" in
-'Sleep') systemctl suspend ;;
-'Shutdown') systemctl reboot ;;
-'Reboot') systemctl poweroff ;;
-'Exit Hyprland') hyprctl dispatch exit ;;
-'Logout') loginctl terminate-user $USER ;;
+'󰒲 Sleep') systemctl suspend ;;
+' Shutdown') systemctl reboot ;;
+' Reboot') systemctl poweroff ;;
+'󰿅 Exit Hyprland') hyprctl dispatch exit ;;
+' Logout') loginctl terminate-user $USER ;;
 esac
