@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+date=$(date '+%b %d %H:%M:%S')
+name=~/Pictures/Screenshots/"$date".png
+grim "$name"
+notify-send "Screenshot saved as:
+$name
+"

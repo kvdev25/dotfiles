@@ -14,6 +14,6 @@ case "$option" in
 '󰒲 Sleep') systemctl suspend ;;
 ' Shutdown') systemctl reboot ;;
 ' Reboot') systemctl poweroff ;;
-'󰿅 Exit Hyprland') hyprctl dispatch exit ;;
+'󰿅 Exit Hyprland') uwsm stop ;;
 ' Logout') loginctl terminate-user $USER ;;
 esac
