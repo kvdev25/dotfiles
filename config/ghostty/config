@@ -1,0 +1,16 @@
+custom-shader = shaders/cursor_tail.glsl
+theme = Matugen
+
+font-family = JetbrainsMono Nerd Font Propo
+font-size = 10.0
+
+window-padding-x = 4
+window-padding-y = 4
+window-padding-balance = true
+
+cursor-style = bar
+cursor-style-blink = false
+cursor-color = cell-foreground
+cursor-text = cell-background
+adjust-cursor-thickness = 4
+shell-integration-features = no-cursor

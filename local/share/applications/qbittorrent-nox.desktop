@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Qbittorrent Nox
+TryExec=qbittorrent-nox
+Exec=qbittorrent-nox %U
+Terminal=false
+Categories=Network;FileTransfer;P2P;
+MimeType=x-scheme-handler/magnet;

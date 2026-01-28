@@ -1,0 +1,21 @@
+#! /usr/bin/env bash
+
+# profile=$(tuned-adm list profiles |
+#   sed 's/^- //' |
+#   awk -F ' - ' '{print $1 "\t" $2}' |
+#   fzf --delimiter='\t' \
+#     --with-nth=1 \
+#     --preview='echo {2}')
+
+profile=$(
+  tuned-adm list |
+    grep '^-' |
+    sed 's/^- //' |
+    awk -F ' - ' '{print $1 "\t" $2}' |
+    fzf --delimiter='\t' --with-nth=1 --preview='echo {2}' |
+    cut -f1
+)
+
+[[ $profile ]] || exit
+notify-send "Power Profile: $profile"
+tuned-adm profile $profile

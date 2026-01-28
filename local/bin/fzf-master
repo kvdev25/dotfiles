@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+file=$(fd fzf ~/.local/bin/ | fzf --delimiter="fzf-" --with-nth=2)
+[[ -f "$file" ]] || exit
+
+setsid open-ghostty -fs $file &
+sleep 0

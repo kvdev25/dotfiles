@@ -1,0 +1,2 @@
+@define-color foreground {{foreground.hex}};
+@define-color background {{background.hex | auto_lightness: -5.0}};

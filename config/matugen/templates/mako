@@ -1,0 +1,6 @@
+border-size={{border.size}}
+border-radius={{border.radius}}
+background-color={{background.hex}}
+text-color={{foreground.hex}}
+progress-color={{accent.hex}}
+border-color={{accent.hex}}

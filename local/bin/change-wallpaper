@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+
+theme=$(cat ~/.local/share/user/theme-details | rg theme | awk '{print $2}')
+mode=$(cat ~/.local/share/user/theme-details | rg mode | awk '{print $2}')
+
+# Get Image
+tmp=$(mktemp)
+yazi ~/Wallpapers/$theme --chooser-file $tmp
+image=$(cat "$tmp")
+[[ ! -f $image ]] && rm -f "$tmp" && exit
+rm -f "$tmp"
+
+# Apply
+awww img "$image"
+
+# Save Image and Mode
+echo "image: $image" >~/.local/share/user/theme-details
+echo "mode: $mode" >>~/.local/share/user/theme-details
+echo "theme: $theme" >>~/.local/share/user/theme-details

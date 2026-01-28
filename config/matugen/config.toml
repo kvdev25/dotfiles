@@ -1,0 +1,26 @@
+[config]
+
+[templates.hyprland]
+input_path = "templates/hypr.conf"
+output_path = "~/.config/hypr/matugen.conf"
+post_hook = "hyprctl reload"
+
+[templates.ghostty]
+input_path = "templates/ghostty.conf"
+output_path = "~/.config/ghostty/themes/Matugen"
+post_hook = "pkill -SIGUSR2 ghostty"
+
+[templates.mako]
+input_path = "templates/mako"
+output_path = "~/.config/mako/matugen"
+post_hook = "makoctl reload"
+
+[templates.waybar]
+input_path = "templates/waybar.css"
+output_path = "~/.config/waybar/matugen.css"
+post_hook = "pkill -SIGUSR2 waybar"
+
+[templates.btop]
+input_path = "templates/btop.theme"
+output_path = "~/.config/btop/themes/matugen.theme"
+post_hook = 'pkill -USR2 btop || true'

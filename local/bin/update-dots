@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+mkdir -p ~/.config ~/.local/share ~/.cache
+
+cd ~/dotfiles
+ln -sf $(realpath config/*) ~/.config/
+ln -sf $(realpath local/bin) ~/.local/
+ln -sf $(realpath local/share/*) ~/.local/share/
+# ln -sf $(realpath cache/*) ~/.cache/
+ln -sf $(realpath home/.*) ~/

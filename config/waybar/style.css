@@ -1,0 +1,86 @@
+@import "matugen.css";
+
+* {
+  font-size: 12;
+  font-family: JetbrainsMono Nerd Font Propo;
+  font-weight: bolder;
+  min-height: 0;
+  margin: 0 0;
+  padding: 0 3;
+  border: 0;
+  background: transparent;
+}
+
+window#waybar {
+  background: @background;
+  color: @foreground;
+}
+
+.modules-left,
+.modules-right {
+  padding: 0 3;
+}
+
+#network,
+#bluetooth,
+#pulseaudio,
+#battery {
+  margin: 0 5;
+}
+
+#workspaces,
+#workspaces button,
+#workspaces button.active,
+#workspaces button.empty,
+#workspaces button.persistent,
+#workspaces button.special,
+#workspaces button.visible,
+#workspaces button.urgent,
+#workspaces button.hosting-monitor,
+#workspaces.workspace-label,
+#workspaces.taskbar-window,
+#workspaces.taskbar-window.active {
+  margin: 0;
+  padding: 0;
+  color: @foreground;
+}
+
+@keyframes to-non-active {
+  from {
+    padding: 0 10;
+  }
+  to {
+    padding: 0 0;
+  }
+}
+
+@keyframes to-active {
+  from {
+    padding: 0 0;
+  }
+  to {
+    padding: 0 10;
+  }
+}
+
+#workspaces button {
+  animation-name: to-non-active;
+  animation-duration: 0.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+#workspaces button.active {
+  background: @foreground;
+  padding: 0 10;
+  animation-name: to-active;
+  animation-duration: 0.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  border-radius: 20;
+}
+
+#workspaces button.empty {
+  opacity: 0.5;
+}
+

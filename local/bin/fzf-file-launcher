@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+file=$(fd -H . / | fzf)
+[[ -f "$file" ]] || exit
+
+if xdg-mime query filetype "$file" | rg -q text; then
+  hyprctl dispatch togglefloating
+  uwsm app -- xdg-open $file
+  exit
+fi
+
+setsid uwsm app -- xdg-open $file &
+sleep 0

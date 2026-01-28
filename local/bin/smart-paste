@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+[[ $(hyprctl activewindow | rg ghostty) ]] &&
+  hyprctl dispatch sendshortcut "CTRL SHIFT,V,activewindow" ||
+  hyprctl dispatch sendshortcut "CTRL,V,activewindow"
