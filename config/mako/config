@@ -1,3 +1,3 @@
 include=~/.config/mako/matugen
-font=Noto Sans 9
+font=NotoSans Nerd Font 10
 default-timeout=10000
