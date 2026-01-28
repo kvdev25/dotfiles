@@ -2,7 +2,7 @@
 
 # Get Image
 tmp=$(mktemp)
-yazi ~/Wallpapers --chooser-file $tmp
+yazi ~/Pictures/Wallpapers --chooser-file $tmp
 image=$(cat $tmp)
 [[ ! -f $image ]] && rm -f $tmp && exit
 rm -f $tmp

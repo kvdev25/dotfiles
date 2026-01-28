@@ -10,10 +10,10 @@ input_path = "templates/ghostty.conf"
 output_path = "~/.config/ghostty/themes/Matugen"
 post_hook = "pkill -SIGUSR2 ghostty"
 
-[templates.mako]
-input_path = "templates/mako"
-output_path = "~/.config/mako/matugen"
-post_hook = "makoctl reload"
+[templates.dunst]
+input_path = "templates/dunstrc"
+output_path = "~/.config/dunst/dunstrc"
+post_hook = "dunstctl reload"
 
 [templates.waybar]
 input_path = "templates/waybar.css"

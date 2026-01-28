@@ -5,7 +5,7 @@ mode=$(cat ~/.local/share/user/theme-details | rg mode | awk '{print $2}')
 
 # Get Image
 tmp=$(mktemp)
-yazi ~/Wallpapers/$theme --chooser-file $tmp
+yazi ~/Pictures/Wallpapers/$theme --chooser-file $tmp
 image=$(cat "$tmp")
 [[ ! -f $image ]] && rm -f "$tmp" && exit
 rm -f "$tmp"

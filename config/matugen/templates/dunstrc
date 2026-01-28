@@ -1,0 +1,12 @@
+[global]
+
+frame_width = {{border.size}}
+progress_bar_corner_radius = {{border.radius}}
+progress_bar_frame_width = 0
+gap_size = {{{{border.size}}+3}}
+font = "NotoSans Nerd Font Propo 10"
+corner_radius = {{border.radius}}
+frame_color = "{{accent.hex}}"
+background = "{{background.hex}}"
+foreground = "{{foreground.hex}}"
+highlight = "{{accent.hex}}"
