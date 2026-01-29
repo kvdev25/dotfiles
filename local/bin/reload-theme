@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+theme=$(cat ~/.local/share/user/theme-details | rg theme | awk '{print $2}')
+matugen json ~/.config/matugen/themes/${theme}.json
