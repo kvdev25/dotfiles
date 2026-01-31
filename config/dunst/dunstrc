@@ -1,12 +1,12 @@
 [global]
 
-frame_width = 1
+frame_width = 2
 progress_bar_corner_radius = 12
 progress_bar_frame_width = 0
-gap_size = 4
+gap_size = 5
 font = "NotoSans Nerd Font Propo 10"
 corner_radius = 12
-frame_color = "#c7c7c7"
-background = "#282c34"
-foreground = "#dbdfe5"
-highlight = "#c7c7c7"
+frame_color = "#d4be98"
+background = "#2e2622"
+foreground = "#ebdbb2"
+highlight = "#d4be98"

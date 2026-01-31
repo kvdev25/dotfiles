@@ -16,9 +16,9 @@
   "color14": { "color": "#89b482" },
   "color15": { "color": "#d4be98" },
 
-  "accent": { "color": "#7daea3" },
+  "accent": { "color": "#d4be98" },
   "cursor": { "color": "#ebdbb2" },
-  "background": { "color": "#282828" },
+  "background": { "color": "#2e2622" },
   "foreground": { "color": "#ebdbb2" },
   "selection_background": { "color": "#ebdbb2" },
   "selection_foreground": { "color": "#d65d0e" },

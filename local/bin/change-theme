@@ -8,7 +8,7 @@ image=$(cat $tmp)
 rm -f $tmp
 
 # Get Theme
-theme=$(basename $(dirname $image))
+theme=$(basename $(dirname "$image"))
 
 # Get Mode
 mode=$(cat ~/.local/share/user/theme-details | rg mode | awk '{print $2}')
@@ -18,7 +18,7 @@ mode=$(cat ~/.local/share/user/theme-details | rg mode | awk '{print $2}')
 awww img "$image"
 if [[ $theme = 'Wallpapers' ]]; then
   theme="dynamic"
-  matugen -q -c ~/.config/matugen/matugen.toml image $image
+  matugen -q -c ~/.config/matugen/matugen.toml image "$image"
 fi
 matugen json ~/.config/matugen/themes/${theme}.json
 

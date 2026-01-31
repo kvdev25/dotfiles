@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ "$1"
+wpctl set-volume -l 2 @DEFAULT_AUDIO_SINK@ "$1"
 
 vol=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')
 
