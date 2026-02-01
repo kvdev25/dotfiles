@@ -11,7 +11,7 @@ image=$(cat "$tmp")
 rm -f "$tmp"
 
 # Apply
-awww img "$image"
+swww img "$image"
 
 # Save Image and Mode
 echo "image: $image" >~/.local/share/user/theme-details

@@ -18,7 +18,8 @@
     "format-ethernet": "󰀂",
     "format-disconnected": "󰤮",
     "format-disabled": "󰤭",
-    "max-length": 50
+    "max-length": 50,
+    "on-click": "uwsm app -- impala.desktop"
   },
 
   "bluetooth": {
@@ -27,16 +28,19 @@
     "format-connected": "󰂯",
     "format-off": "󰂲",
     "format-disabled": "󰂲",
+    "on-click": "uwsm app -- bluetui.desktop"
   },
 
   "pulseaudio": {
     "format": "",
     "format-muted": "",
+    "on-click": "open-ghostty -f wiremix"
   },
 
   "battery": {
     "format": "{icon}",
     "format-icons": ["󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"],
     "format-charging": "{icon}󱐋",
+    "on-click": "open-ghostty -fs fzf-power-profiles-menu"
   }
 }

@@ -4,18 +4,22 @@
 tmp=$(mktemp)
 yazi ~/Pictures/Wallpapers --chooser-file $tmp
 image=$(cat $tmp)
-[[ ! -f $image ]] && rm -f $tmp && exit
 rm -f $tmp
 
-# Get Theme
-theme=$(basename $(dirname "$image"))
+if [[ -f $image ]]; then
+  theme=$(basename $(dirname "$image"))
+  swww img "$image"
+elif [[ -d "$image" ]]; then
+  theme=$(basename "$image")
+else
+  exit
+fi
 
 # Get Mode
 mode=$(cat ~/.local/share/user/theme-details | rg mode | awk '{print $2}')
 [[ $mode != "light" ]] && mode="dark"
 
 # Apply
-awww img "$image"
 if [[ $theme = 'Wallpapers' ]]; then
   theme="dynamic"
   matugen -q -c ~/.config/matugen/matugen.toml image "$image"

@@ -39,6 +39,7 @@
   },
 
   "blur": {
+    "enabled": true,
     "size": 0,
     "passes": 0
   },

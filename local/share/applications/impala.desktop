@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Impala
+Exec=open-ghostty -f impala
+Terminal=false
+Categories=Network;
+MimeType=;

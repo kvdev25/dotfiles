@@ -4,6 +4,3 @@ date=$(date '+%b %d %H:%M:%S')
 name=~/Pictures/Screenshots/"$date".png
 area=$(slurp)
 grim -g "$area" "$name"
-notify-send "Screenshot saved as:
-$name
-"
