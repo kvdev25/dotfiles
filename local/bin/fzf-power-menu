@@ -12,8 +12,8 @@ option=$(printf "%s\n" "${modes[@]}" | fzf)
 
 case "$option" in
 '󰒲 Sleep') systemctl suspend ;;
-' Shutdown') systemctl reboot ;;
-' Reboot') systemctl poweroff ;;
+' Shutdown') systemctl poweroff ;;
+' Reboot') systemctl reboot ;;
 '󰿅 Exit Hyprland') uwsm stop ;;
 ' Logout') loginctl terminate-user $USER ;;
 esac

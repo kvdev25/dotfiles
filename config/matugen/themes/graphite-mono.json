@@ -35,17 +35,17 @@
 
   "opacity": {
     "active": 1.0,
-    "inactive": 0.7
+    "inactive": 1.0
   },
 
   "blur": {
-    "enabled": true,
+    "enabled": false,
     "size": 8,
     "passes": 3
   },
 
   "shadow": {
-    "enabled": true,
+    "enabled": false,
     "range": 4,
     "power": 3,
     "sharp": false,
