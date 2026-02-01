@@ -13,7 +13,7 @@ palette = 11 = #d6c294
 palette = 12 = #b2c5db
 palette = 13 = #e695dd
 palette = 14 = #91bfbb
-palette = 15 = #2e2e2e
+palette = 15 = #ffffff
 
 background = #1f1f1f
 foreground = #c7c7c7
