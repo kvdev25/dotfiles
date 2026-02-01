@@ -31,6 +31,7 @@ libnotify
 libpulse
 linux
 linux-firmware
+man-db
 matugen
 mpv
 neovim
@@ -45,6 +46,7 @@ pipewire-pulse
 qt5-wayland
 qt6-wayland
 ripgrep
+satty
 slurp
 sof-firmware
 starship
