@@ -8,3 +8,5 @@ ln -sf $(realpath local/bin) ~/.local/
 ln -sf $(realpath local/share/*) ~/.local/share/
 # ln -sf $(realpath cache/*) ~/.cache/
 ln -sf $(realpath home/.*) ~/
+
+pacman -Qeq >~/.local/share/user/app-list
