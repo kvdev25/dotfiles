@@ -34,7 +34,7 @@
   "pulseaudio": {
     "format": "",
     "format-muted": "",
-    "on-click": "open-ghostty -f wiremix"
+    "on-click": "uwsm app -- wiremix.desktop"
   },
 
   "battery": {

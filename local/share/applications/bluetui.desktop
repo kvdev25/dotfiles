@@ -1,7 +1,5 @@
 [Desktop Entry]
 Type=Application
-Name=Impala
-Exec=open-ghostty -f bluetui
-Terminal=false
-Categories=Network;
-MimeType=;
+Name=Bluetooth TUI
+Exec=bluetui
+Terminal=true
