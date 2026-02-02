@@ -4,6 +4,7 @@ brightnessctl set "$1"
 brightness=$(brightnessctl -q get)
 
 notify-send \
+  -t 1500 \
   -h int:value:"$brightness" \
   -h string:x-canonical-private-synchronous:brightness \
   "Brightness" "${brightness}%"

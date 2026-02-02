@@ -1,2 +1,12 @@
 @define-color foreground {{foreground.hex}};
 @define-color background {{background.hex | auto_lightness: -5.0}};
+
+#workspaces button:hover,
+#workspaces button.active,
+#clock:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#battery:hover,
+#network:hover {
+  border-radius: {{border.radius}}px;
+}

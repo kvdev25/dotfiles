@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 file=$(fd -H . / | fzf)
-[[ -f "$file" ]] || exit
+[[ -f "$file" || -d "$file" ]] || exit
 
 if xdg-mime query filetype "$file" | rg -q text; then
   hyprctl dispatch togglefloating
@@ -10,4 +10,4 @@ if xdg-mime query filetype "$file" | rg -q text; then
 fi
 
 setsid uwsm app -- xdg-open $file &
-sleep 0
+sleep 1

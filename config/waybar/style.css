@@ -77,10 +77,28 @@ window#waybar {
   animation-duration: 0.2s;
   animation-timing-function: linear;
   animation-iteration-count: 1;
-  border-radius: 20;
 }
 
 #workspaces button.empty {
   opacity: 0.5;
+}
+
+#workspaces button:hover,
+#clock:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#battery:hover,
+#network:hover {
+  transition-duration: .4s;
+  background: @foreground;
+  color: @background;
+}
+
+tooltip {
+  background: @background;
+}
+
+tooltip label {
+  color: @foreground;
 }
 
