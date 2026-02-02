@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+pacman -Qeq >~/.local/share/user/app-list
+notify-send "App List: ~/.local/share/user/app-list"
