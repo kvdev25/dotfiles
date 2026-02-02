@@ -3,7 +3,7 @@
   "color1": { "color": "#f38ba8" },
   "color2": { "color": "#a6e3a1" },
   "color3": { "color": "#f9e2af" },
-  "color4": { "color": "#e3b7f3" },
+  "color4": { "color": "#ffb4a6" },
   "color5": { "color": "#f5c2e7" },
   "color6": { "color": "#94e2d5" },
   "color7": { "color": "#a6adc8" },
@@ -16,12 +16,12 @@
   "color14": { "color": "#6bd7ca" },
   "color15": { "color": "#bac2de" },
 
-  "accent": { "color": "#f5b7b6" },
-  "cursor": { "color": "#e3b7f3" },
-  "background": { "color": "#231e23" },
-  "foreground": { "color": "#e9e0e7" },
-  "selection_background": { "color": "#f5b7b6" },
-  "selection_foreground": { "color": "#4c2525" },
+  "accent": { "color": "#ddc48c" },
+  "cursor": { "color": "#ffb4a6" },
+  "background": { "color": "#271d1c" },
+  "foreground": { "color": "#f1dfdb" },
+  "selection_background": { "color": "#ddc48c" },
+  "selection_foreground": { "color": "#3d2e04" },
 
   "border": {
     "size": 1,
