@@ -1,6 +1,11 @@
 #! /usr/bin/env bash
 
+if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+  export IN_GHOSTTY_FLOAT=1
+  exec open-ghostty -fs "$(realpath "$0")" "$@"
+fi
+
 cliphist list |
-  fzf --preview="cliphist decode {1}" |
+  fzf --style=minimal --preview="cliphist decode {1}" |
   cliphist decode |
   wl-copy

@@ -1,10 +1,15 @@
 #! /usr/bin/env bash
 
+if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+  export IN_GHOSTTY_FLOAT=1
+  exec open-ghostty -fs "$(realpath "$0")" "$@"
+fi
+
 app=$(
   fd -H -e desktop . /usr/share/applications ~/.local/share/applications -0 |
     xargs -0 -n1 basename |
     sed 's/\.[^.]*$//' |
-    fzf
+    fzf --style=minimal
 )
 [[ $app ]] || exit
 setsid uwsm app $app.desktop &

@@ -1,6 +1,11 @@
 #! /usr/bin/env bash
 
-file=$(fd -H . / | fzf)
+if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+  export IN_GHOSTTY_FLOAT=1
+  exec open-ghostty -fs "$(realpath "$0")" "$@"
+fi
+
+file=$(fd -H . / | fzf --style=minimal)
 [[ -f "$file" || -d "$file" ]] || exit
 
 if xdg-mime query filetype "$file" | rg -q text; then

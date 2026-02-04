@@ -1,5 +1,10 @@
 #! /usr/bin/env bash
 
+if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+  export IN_GHOSTTY_FLOAT=1
+  exec open-ghostty -f "$(realpath "$0")" "$@"
+fi
+
 # Get Image
 tmp=$(mktemp)
 yazi ~/Pictures/Wallpapers --chooser-file $tmp

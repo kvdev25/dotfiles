@@ -1,15 +1,20 @@
 #! /usr/bin/env bash
 
+if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+  export IN_GHOSTTY_FLOAT=1
+  exec open-ghostty -f "$(realpath "$0")" "$@"
+fi
+
 for arg in "$@"; do
   case "$arg" in
   -S)
     yay -Slq |
-      fzf --preview="yay -Si {1}" |
+      fzf --style=minimal --preview="yay -Si {1}" |
       xargs -ro yay -S
     ;;
   -R)
     yay -Qeq |
-      fzf --preview="yay -Qi {1}" |
+      fzf --style=minimal --preview="yay -Qi {1}" |
       xargs -ro yay -Rns
     ;;
   *)

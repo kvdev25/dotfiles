@@ -1,7 +1,12 @@
 #! /usr/bin/env bash
 
-file=$(fd fzf ~/.local/bin/ | fzf --delimiter="fzf-" --with-nth=2)
+if [[ -z "${IN_GHOSTTY_MASTER:-}" ]]; then
+  export IN_GHOSTTY_MASTER=1
+  open-ghostty -fs "$(realpath "$0")" "$@"
+fi
+
+file=$(fd fzf ~/.local/bin/ | fzf --style=minimal --delimiter="fzf-" --with-nth=2)
 [[ -f "$file" ]] || exit
 
-setsid open-ghostty -fs $file &
+setsid $(realpath "$file") &
 sleep 0

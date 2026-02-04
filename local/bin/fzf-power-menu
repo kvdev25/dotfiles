@@ -1,5 +1,10 @@
 #! /usr/bin/env bash
 
+if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+  export IN_GHOSTTY_FLOAT=1
+  exec open-ghostty -fs "$(realpath "$0")" "$@"
+fi
+
 modes=(
   "󰒲 Sleep"
   " Shutdown"
@@ -8,7 +13,7 @@ modes=(
   " Logout"
 )
 
-option=$(printf "%s\n" "${modes[@]}" | fzf)
+option=$(printf "%s\n" "${modes[@]}" | fzf --style=minimal)
 
 case "$option" in
 '󰒲 Sleep') systemctl suspend ;;
