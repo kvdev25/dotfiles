@@ -5,20 +5,26 @@ if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
   exec open-ghostty -f "$(realpath "$0")" "$@"
 fi
 
+source="pacman"
+action="install"
+
 for arg in "$@"; do
   case "$arg" in
-  -S)
-    pacman -Slq |
-      fzf --style=minimal --preview="pacman -Si {1}" |
-      xargs -ro sudo pacman -S
-    ;;
-  -R)
-    pacman -Qeq |
-      fzf --style=minimal --preview="pacman -Qi {1}" |
-      xargs -ro sudo pacman -Rns
-    ;;
+  -aur) source="yay" ;;
+  -S) action="install" ;;
+  -R) action="remove" ;;
   *)
     echo "Specify '-S' to install or '-R' to remove"
     ;;
   esac
 done
+
+if [[ $action == "install" ]]; then
+  $source -Slq |
+    fzf --style=minimal --preview="pacman -Si {1}" |
+    xargs -ro sudo pacman -S
+elif [[ $action == "remove" ]]; then
+  pacman -Qeq |
+    fzf --style=minimal --preview="pacman -Qi {1}" |
+    xargs -ro sudo pacman -Rns
+fi

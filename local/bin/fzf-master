@@ -2,7 +2,7 @@
 
 if [[ -z "${IN_GHOSTTY_MASTER:-}" ]]; then
   export IN_GHOSTTY_MASTER=1
-  open-ghostty -fs "$(realpath "$0")" "$@"
+  exec open-ghostty -fs "$(realpath "$0")" "$@"
 fi
 
 file=$(fd fzf ~/.local/bin/ | fzf --style=minimal --delimiter="fzf-" --with-nth=2)
