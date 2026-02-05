@@ -41,6 +41,6 @@
     "format": "{icon}",
     "format-icons": ["󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"],
     "format-charging": "{icon}󱐋",
-    "on-click": "open-ghostty -fs fzf-power-profiles-menu"
+    "on-click": "fzf-power-profiles-menu"
   }
 }

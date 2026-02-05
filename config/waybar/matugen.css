@@ -1,12 +1,11 @@
-@define-color foreground #ebdbb2;
-@define-color background #1f1a17;
+@define-color foreground #cdd6f4;
+@define-color background #14141f;
 
 #workspaces button:hover,
-#workspaces button.active,
 #clock:hover,
 #bluetooth:hover,
 #pulseaudio:hover,
 #battery:hover,
 #network:hover {
-  border-radius: 12px;
+  border-radius: 20px;
 }

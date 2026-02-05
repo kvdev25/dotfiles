@@ -24,7 +24,7 @@
   "selection_foreground": { "color": "#cdd6f4" },
 
   "border": {
-    "size": 1,
+    "size": 2,
     "radius": 20
   },
 
@@ -35,13 +35,13 @@
 
   "opacity": {
     "active": 1.0,
-    "inactive": 1.0
+    "inactive": 0.7
   },
 
   "blur": {
-    "enabled": false,
-    "size": 8,
-    "passes": 3
+    "enabled": true,
+    "size": 32,
+    "passes": 4
   },
 
   "shadow": {

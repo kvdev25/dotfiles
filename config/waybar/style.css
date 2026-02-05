@@ -73,6 +73,7 @@ window#waybar {
 #workspaces button.active {
   background: @foreground;
   padding: 0 10;
+  border-radius: 20;
   animation-name: to-active;
   animation-duration: 0.2s;
   animation-timing-function: linear;
