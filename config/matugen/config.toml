@@ -19,8 +19,3 @@ post_hook = "dunstctl reload"
 input_path = "templates/waybar.css"
 output_path = "~/.config/waybar/matugen.css"
 post_hook = "pkill -SIGUSR2 waybar"
-
-[templates.btop]
-input_path = "templates/btop.theme"
-output_path = "~/.config/btop/themes/matugen.theme"
-post_hook = 'pkill -USR2 btop || true'
