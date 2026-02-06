@@ -1,0 +1,13 @@
+[mgr]
+border_symbol = " "
+
+[mode]
+normal_main = { fg = "black", bg = "blue" }
+normal_alt = { fg = "blue", bg = "black" }
+
+[icon]
+conds = [
+  { if = "dir", text = "", fg = "blue" },
+  { if = "exec", text = "", fg = "green" },
+  { if = "!dir", text = "", fg = "reset" }
+]
