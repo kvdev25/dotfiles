@@ -2,7 +2,7 @@
 border_symbol = " "
 
 [mode]
-normal_main = { fg = "black", bg = "blue" }
+normal_main = { fg = "black", bg = "blue", bold = true }
 normal_alt = { fg = "blue", bg = "black" }
 
 [icon]
