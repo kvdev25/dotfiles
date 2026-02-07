@@ -2,6 +2,8 @@
 
 Most of my effort was put in local/bin, which has an arsenal of fzf-based menus (and more) which are run with the 'open-ghostty', to supplement Rofi, as fzf has a better matcher, and that is one less config I have to worry about.
 
+![Preview](resources/tokyonight.png)
+
 ### Vim-compliant navigation
 no arrow keys for navigation, ever
 
