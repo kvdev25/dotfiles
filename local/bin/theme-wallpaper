@@ -1,19 +1,22 @@
 #! /usr/bin/env bash
 
-if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
-  export IN_GHOSTTY_FLOAT=1
-  exec open-ghostty -f "$(realpath "$0")" "$@"
-fi
-
 theme=$(cat ~/.local/share/user/theme-details | rg theme | awk '{print $2}')
 mode=$(cat ~/.local/share/user/theme-details | rg mode | awk '{print $2}')
 
-# Get Image
-tmp=$(mktemp)
-yazi ~/Pictures/Wallpapers/$theme --chooser-file $tmp
-image=$(cat "$tmp")
-[[ ! -f $image ]] && rm -f "$tmp" && exit
-rm -f "$tmp"
+if [[ -n "$1" ]]; then
+  image="$1"
+else
+  if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
+    export IN_GHOSTTY_FLOAT=1
+    exec open-ghostty -f "$(realpath "$0")" "$@"
+  fi
+
+  # Get Image
+  tmp=$(mktemp)
+  yazi ~/Pictures/Wallpapers/$theme --chooser-file $tmp
+  image=$(cat $tmp)
+  rm -f $tmp
+fi
 
 # Apply
 swww img "$image"
