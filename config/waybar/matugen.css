@@ -1,5 +1,5 @@
-@define-color foreground #c0caf5;
-@define-color background #101017;
+@define-color foreground #cdd6f4;
+@define-color background #14141f;
 
 #workspaces button:hover,
 #clock:hover,
@@ -7,5 +7,10 @@
 #pulseaudio:hover,
 #battery:hover,
 #network:hover {
-  border-radius: 0px;
+  border-radius: 20px;
+}
+
+.modules-left,
+.modules-right {
+  margin: 0 6;
 }

@@ -9,3 +9,8 @@
 #network:hover {
   border-radius: {{border.radius}}px;
 }
+
+.modules-left,
+.modules-right {
+  margin: 0 {{gaps.out}};
+}

@@ -19,10 +19,17 @@ for arg in "$@"; do
   esac
 done
 
-if [[ $action == "install" ]]; then
-  $source -Slq |
-    fzf --style=minimal --preview="pacman -Si {1}" |
-    xargs -ro sudo pacman -S
+if [[ $action = "install" ]]; then
+  if [[ $source = "yay" ]]; then
+    $source -Slq |
+      fzf --style=minimal --preview="$source -Si {1}" |
+      xargs -ro $source -S
+  else
+    $source -Slq |
+      fzf --style=minimal --preview="$source -Si {1}" |
+      xargs -ro sudo $source -S
+  fi
+
 elif [[ $action == "remove" ]]; then
   pacman -Qeq |
     fzf --style=minimal --preview="pacman -Qi {1}" |

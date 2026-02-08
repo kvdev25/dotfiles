@@ -1,9 +1,11 @@
 {
   "layer": "top",
+  "spacing": 18,
   "reload_style_on_change": false,
-  "modules-left": [ "hyprland/workspaces" ],
+  "modules-left": [ "hyprland/workspaces", "hyprland/submap" ],
   "modules-center": [ "clock" ],
   "modules-right": [ "network", "bluetooth", "pulseaudio", "battery" ],
+
   "hyprland/workspaces": {
     "format": "<sub>{icon}</sub>",
     "format-icons": {
@@ -11,6 +13,11 @@
     },
     "persistent-workspaces": { "*": 10 }
   },
+
+   "hyprland/submap": {
+     "format": "submap  :  {}",
+    "on-click": "hyprctl dispatch submap reset"
+   },
 
   "network": {
     "format": "{ifname}",

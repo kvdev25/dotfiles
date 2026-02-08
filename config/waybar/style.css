@@ -5,43 +5,14 @@
   font-family: NotoSans Nerd Font Propo;
   font-weight: bolder;
   min-height: 0;
-  margin: 0 0;
-  padding: 0 3;
+  margin: 0;
+  padding: 0;
   border: 0;
   background: transparent;
 }
 
 window#waybar {
   background: @background;
-  color: @foreground;
-}
-
-.modules-left,
-.modules-right {
-  padding: 0 3;
-}
-
-#network,
-#bluetooth,
-#pulseaudio,
-#battery {
-  margin: 0 5;
-}
-
-#workspaces,
-#workspaces button,
-#workspaces button.active,
-#workspaces button.empty,
-#workspaces button.persistent,
-#workspaces button.special,
-#workspaces button.visible,
-#workspaces button.urgent,
-#workspaces button.hosting-monitor,
-#workspaces.workspace-label,
-#workspaces.taskbar-window,
-#workspaces.taskbar-window.active {
-  margin: 0;
-  padding: 0;
   color: @foreground;
 }
 
@@ -64,6 +35,7 @@ window#waybar {
 }
 
 #workspaces button {
+  color: @foreground;
   animation-name: to-non-active;
   animation-duration: 0.2s;
   animation-timing-function: linear;

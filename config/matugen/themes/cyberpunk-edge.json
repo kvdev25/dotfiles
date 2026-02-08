@@ -46,12 +46,12 @@
 
   "shadow": {
     "enabled": true,
-    "range": 4,
-    "power": 3,
+    "range": 0,
+    "power": 1,
     "sharp": true,
-    "active_color": { "color": "#000000" },
+    "active_color": { "color": "#fc5cff" },
     "inactive_color": { "color": "#000000" },
     "offset_x": 5,
-    "offset_y": 10
+    "offset_y": 5 
   }
 }
