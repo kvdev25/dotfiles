@@ -1,0 +1,289 @@
+#!/usr/bin/env lua
+
+-- =========================
+-- Paths
+-- =========================
+
+local XDG_CONFIG_HOME = os.getenv("XDG_CONFIG_HOME")
+if not XDG_CONFIG_HOME then
+  error("XDG_CONFIG_HOME is not set")
+end
+
+local THEMES_DIR    = XDG_CONFIG_HOME .. "/kv/themes"
+local TEMPLATES_DIR = XDG_CONFIG_HOME .. "/kv/templates"
+local HOME          = os.getenv("HOME")
+
+-- =========================
+-- Helpers
+-- =========================
+
+local function trim(s)
+  return s:match("^%s*(.-)%s*$")
+end
+
+local function read_file(path)
+  local f = io.open(path, "r")
+  if not f then return nil end
+  local content = f:read("*a")
+  f:close()
+  return content
+end
+
+local function write_file(path, content)
+  local dir = path:match("(.+)/")
+  if dir then
+    os.execute(string.format("mkdir -p %q", dir))
+  end
+
+  local f = assert(io.open(path, "w"))
+  f:write(content)
+  f:close()
+end
+
+-- =========================
+-- Theme key resolution
+-- =========================
+
+local function resolve_key(theme, key)
+  local value = theme
+  for part in key:gmatch("[^.]+") do
+    if type(value) ~= "table" then return nil end
+    value = value[part]
+    if value == nil then return nil end
+  end
+  return value
+end
+
+local function is_truthy(v)
+  if v == nil or v == false then return false end
+  if type(v) == "number" and v == 0 then return false end
+  return true
+end
+
+-- =========================
+-- Value resolution
+-- =========================
+
+local function resolve_value(theme, expr)
+  expr = trim(expr)
+
+  local num = tonumber(expr)
+  if num then return num end
+
+  local str = expr:match([[^"(.*)"$]]) or expr:match([[^'(.*)'$]])
+  if str then return str end
+
+  for key in expr:gmatch("[^|]+") do
+    key = trim(key)
+    local val = resolve_key(theme, key)
+    if val ~= nil then
+      return val
+    end
+  end
+
+  return nil
+end
+
+-- =========================
+-- Value-level if expressions
+-- =========================
+
+local function eval_if(expr, theme)
+  local cond, yes, no = expr:match(
+    "^if%s+(.+)%s+then%s+(.+)%s+else%s+(.+)$"
+  )
+  if not cond then return nil end
+
+  local cond_val = resolve_value(theme, cond)
+  if is_truthy(cond_val) then
+    return resolve_value(theme, yes)
+  else
+    return resolve_value(theme, no)
+  end
+end
+
+-- =========================
+-- Modifiers
+-- =========================
+
+local function apply_modifiers(val, mods)
+  if mods == "" then return val end
+
+  for mod in mods:gmatch("[^:]+") do
+    mod = trim(mod)
+
+    if mod == "strip" then
+      if type(val) == "string" then
+        val = val:gsub("^#", "")
+      end
+    else
+      io.stderr:write("Warning: unknown modifier :" .. mod .. "\n")
+    end
+  end
+
+  return val
+end
+
+-- =========================
+-- Template substitution
+-- =========================
+
+local function apply_keys(template, theme)
+  return template:gsub("{{(.-)}}", function(expr)
+    expr = trim(expr)
+
+    -- value-level if
+    if expr:match("^if%s+") then
+      local val = eval_if(expr, theme)
+      if val ~= nil then
+        return tostring(val)
+      end
+      io.stderr:write("Warning: invalid if-expression {" .. expr .. "}\n")
+      return ""
+    end
+
+    -- fallback + modifiers
+    for raw in expr:gmatch("[^|]+") do
+      local part      = trim(raw)
+      local key, mods = part:match("^([^:]+):?(.*)$")
+      key             = trim(key or "")
+      mods            = trim(mods or "")
+
+      local val       = resolve_key(theme, key)
+      if val ~= nil then
+        val = apply_modifiers(val, mods)
+        return tostring(val)
+      end
+    end
+
+    io.stderr:write("Warning: missing keys {" .. expr .. "}\n")
+    return ""
+  end)
+end
+
+-- =========================
+-- Command conditionals
+-- =========================
+
+local function eval_condition(theme, cond)
+  local key, op, value =
+      cond:match([[^%s*([%w%.]+)%s*(==|!=)%s*"(.-)"%s*$]])
+  if not key then return false end
+
+  local actual = resolve_key(theme, key)
+  if actual == nil then return false end
+
+  if op == "==" then
+    return tostring(actual) == value
+  else
+    return tostring(actual) ~= value
+  end
+end
+
+local function execute_block(block)
+  for line in block:gmatch("[^\n]+") do
+    line = trim(line)
+    if line ~= "" then
+      print("Executing:     ", line)
+      os.execute(line)
+    end
+  end
+end
+
+local function execute_conditional_commands(body, theme)
+  local branches = {}
+
+  for cond, block in body:gmatch([[if%s+(.+)%s*{%s*(.-)%s*}]]) do
+    table.insert(branches, { cond = cond, block = block })
+  end
+
+  for cond, block in body:gmatch([[elif%s+(.+)%s*{%s*(.-)%s*}]]) do
+    table.insert(branches, { cond = cond, block = block })
+  end
+
+  local else_block = body:match([[else%s*{%s*(.-)%s*}]])
+
+  for _, branch in ipairs(branches) do
+    if eval_condition(theme, branch.cond) then
+      execute_block(branch.block)
+      return true
+    end
+  end
+
+  if else_block then
+    execute_block(else_block)
+    return true
+  end
+
+  return false
+end
+
+-- =========================
+-- Load theme
+-- =========================
+
+local theme_name = arg[1]
+if not theme_name then
+  error("Usage: apply-theme.lua <theme-name>")
+end
+
+local theme_dir = THEMES_DIR .. "/" .. theme_name
+local theme = dofile(theme_dir .. "/theme.lua")
+
+-- =========================
+-- Process templates
+-- =========================
+
+local handle = io.popen("ls " .. TEMPLATES_DIR)
+for template_name in handle:lines() do
+  local generic_path  = TEMPLATES_DIR .. "/" .. template_name
+  local override_path = theme_dir .. "/" .. template_name
+
+  local template_path =
+      read_file(override_path) and override_path or generic_path
+
+  local content       = read_file(template_path)
+  if not content then goto continue end
+
+  local header, body = content:match("^(.-)\n(.*)")
+  if not header then goto continue end
+
+  local paths_part, command = header:match("^(.-)::(.*)$")
+  if not command then
+    io.stderr:write("Invalid header in " .. template_name .. "\n")
+    goto continue
+  end
+
+  paths_part  = trim(paths_part or "")
+  command     = trim(command)
+
+  local paths = {}
+  if paths_part ~= "" then
+    for p in paths_part:gmatch("%S+") do
+      table.insert(paths, p)
+    end
+  end
+
+  local final = apply_keys(body, theme)
+
+  -- Write files
+  for _, path in ipairs(paths) do
+    path = path:gsub("^~", HOME)
+    write_file(path, final)
+    print("Written:       ", path)
+  end
+
+  -- Conditional command block
+  if command:match("^if%s+") then
+    execute_conditional_commands(command .. "\n" .. final, theme)
+    goto continue
+  end
+
+  -- Normal command
+  if command ~= "" then
+    print("Executing:     ", command)
+    os.execute(command)
+  end
+
+  ::continue::
+end
