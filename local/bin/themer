@@ -21,6 +21,10 @@ local function trim(s)
   return s:match("^%s*(.-)%s*$")
 end
 
+local function clamp(v, min, max)
+  return math.max(min, math.min(max, v))
+end
+
 local function read_file(path)
   local f = io.open(path, "r")
   if not f then return nil end
@@ -34,10 +38,30 @@ local function write_file(path, content)
   if dir then
     os.execute(string.format("mkdir -p %q", dir))
   end
-
   local f = assert(io.open(path, "w"))
   f:write(content)
   f:close()
+end
+
+local function exists(path)
+  return os.execute(string.format("test -e %q", path)) == 0
+end
+
+local function symlink_force(target, link)
+  os.execute(string.format("ln -sfn %q %q", target, link))
+end
+
+local function list_files(dir)
+  local files = {}
+  local p = io.popen("ls -1 " .. dir .. " 2>/dev/null")
+  if not p then return files end
+  for f in p:lines() do
+    if f ~= "current" then
+      table.insert(files, f)
+    end
+  end
+  p:close()
+  return files
 end
 
 -- =========================
@@ -54,12 +78,6 @@ local function resolve_key(theme, key)
   return value
 end
 
-local function is_truthy(v)
-  if v == nil or v == false then return false end
-  if type(v) == "number" and v == 0 then return false end
-  return true
-end
-
 -- =========================
 -- Value resolution
 -- =========================
@@ -67,39 +85,44 @@ end
 local function resolve_value(theme, expr)
   expr = trim(expr)
 
+  if expr == "true" then return true end
+  if expr == "false" then return false end
+
   local num = tonumber(expr)
   if num then return num end
 
   local str = expr:match([[^"(.*)"$]]) or expr:match([[^'(.*)'$]])
   if str then return str end
 
+  if expr:match("^#?[%x]+$") and (#expr == 6 or #expr == 7) then
+    return expr
+  end
+
   for key in expr:gmatch("[^|]+") do
     key = trim(key)
     local val = resolve_key(theme, key)
-    if val ~= nil then
-      return val
-    end
+    if val ~= nil then return val end
   end
 
   return nil
 end
 
 -- =========================
--- Value-level if expressions
+-- Color helpers
 -- =========================
 
-local function eval_if(expr, theme)
-  local cond, yes, no = expr:match(
-    "^if%s+(.+)%s+then%s+(.+)%s+else%s+(.+)$"
-  )
-  if not cond then return nil end
+local function parse_hex(val)
+  if type(val) ~= "string" then return nil end
+  local hex = val:gsub("^#", "")
+  if not hex:match("^[%x]+$") or #hex ~= 6 then return nil end
+  return
+      tonumber(hex:sub(1, 2), 16),
+      tonumber(hex:sub(3, 4), 16),
+      tonumber(hex:sub(5, 6), 16)
+end
 
-  local cond_val = resolve_value(theme, cond)
-  if is_truthy(cond_val) then
-    return resolve_value(theme, yes)
-  else
-    return resolve_value(theme, no)
-  end
+local function rgb_to_hex(r, g, b)
+  return string.format("#%02x%02x%02x", r, g, b)
 end
 
 -- =========================
@@ -107,14 +130,75 @@ end
 -- =========================
 
 local function apply_modifiers(val, mods)
-  if mods == "" then return val end
-
   for mod in mods:gmatch("[^:]+") do
     mod = trim(mod)
+    local name, arg = mod:match("^(%w+)%((.-)%)$")
+    name = name or mod
 
-    if mod == "strip" then
-      if type(val) == "string" then
-        val = val:gsub("^#", "")
+    if name == "upper" and type(val) == "string" then
+      val = val:upper()
+    elseif name == "lower" and type(val) == "string" then
+      val = val:lower()
+    elseif type(val) == "number" then
+      local n = tonumber(arg)
+
+      if name == "add" and n then
+        val = val + n
+      elseif name == "sub" and n then
+        val = val - n
+      elseif name == "mul" and n then
+        val = val * n
+      elseif name == "div" and n then
+        val = val / n
+      elseif name == "min" and n then
+        val = math.min(val, n)
+      elseif name == "max" and n then
+        val = math.max(val, n)
+      elseif name == "clamp" then
+        local a, b = arg:match("([^,]+),([^,]+)")
+        if a and b then
+          val = clamp(val, tonumber(a), tonumber(b))
+        end
+      elseif name == "round" then
+        val = math.floor(val + 0.5)
+      elseif name == "floor" then
+        val = math.floor(val)
+      elseif name == "ceil" then
+        val = math.ceil(val)
+      elseif name == "percent" then
+        val = tostring(val * 100) .. "%"
+      end
+    elseif name == "strip" and type(val) == "string" then
+      val = val:gsub("^#", "")
+    elseif name == "rgb" then
+      local r, g, b = parse_hex(val)
+      if r then val = string.format("%d, %d, %d", r, g, b) end
+    elseif name == "rgba" then
+      local a = tonumber(arg)
+      local r, g, b = parse_hex(val)
+      if r and a then
+        val = string.format("%d, %d, %d, %.3f", r, g, b, clamp(a, 0, 1))
+      end
+    elseif name == "hex" then
+      local a = tonumber(arg)
+      local r, g, b = parse_hex(val)
+      if r and a then
+        val = string.format(
+          "#%02x%02x%02x%02x",
+          r, g, b, math.floor(clamp(a, 0, 1) * 255)
+        )
+      end
+    elseif name == "lighten" or name == "darken" then
+      local amt = tonumber(arg)
+      local r, g, b = parse_hex(val)
+      if r and amt then
+        amt = clamp(amt, 0, 1)
+        local f = (name == "lighten") and (1 + amt) or (1 - amt)
+        val = rgb_to_hex(
+          clamp(math.floor(r * f), 0, 255),
+          clamp(math.floor(g * f), 0, 255),
+          clamp(math.floor(b * f), 0, 255)
+        )
       end
     else
       io.stderr:write("Warning: unknown modifier :" .. mod .. "\n")
@@ -132,27 +216,15 @@ local function apply_keys(template, theme)
   return template:gsub("{{(.-)}}", function(expr)
     expr = trim(expr)
 
-    -- value-level if
-    if expr:match("^if%s+") then
-      local val = eval_if(expr, theme)
-      if val ~= nil then
-        return tostring(val)
-      end
-      io.stderr:write("Warning: invalid if-expression {" .. expr .. "}\n")
-      return ""
-    end
-
-    -- fallback + modifiers
     for raw in expr:gmatch("[^|]+") do
-      local part      = trim(raw)
-      local key, mods = part:match("^([^:]+):?(.*)$")
-      key             = trim(key or "")
-      mods            = trim(mods or "")
+      local part = trim(raw)
+      local value_expr, mods = part:match("^([^:]+):?(.*)$")
+      value_expr = trim(value_expr or "")
+      mods = trim(mods or "")
 
-      local val       = resolve_key(theme, key)
+      local val = resolve_value(theme, value_expr)
       if val ~= nil then
-        val = apply_modifiers(val, mods)
-        return tostring(val)
+        return tostring(apply_modifiers(val, mods))
       end
     end
 
@@ -162,73 +234,18 @@ local function apply_keys(template, theme)
 end
 
 -- =========================
--- Command conditionals
--- =========================
-
-local function eval_condition(theme, cond)
-  local key, op, value =
-      cond:match([[^%s*([%w%.]+)%s*(==|!=)%s*"(.-)"%s*$]])
-  if not key then return false end
-
-  local actual = resolve_key(theme, key)
-  if actual == nil then return false end
-
-  if op == "==" then
-    return tostring(actual) == value
-  else
-    return tostring(actual) ~= value
-  end
-end
-
-local function execute_block(block)
-  for line in block:gmatch("[^\n]+") do
-    line = trim(line)
-    if line ~= "" then
-      print("Executing:     ", line)
-      os.execute(line)
-    end
-  end
-end
-
-local function execute_conditional_commands(body, theme)
-  local branches = {}
-
-  for cond, block in body:gmatch([[if%s+(.+)%s*{%s*(.-)%s*}]]) do
-    table.insert(branches, { cond = cond, block = block })
-  end
-
-  for cond, block in body:gmatch([[elif%s+(.+)%s*{%s*(.-)%s*}]]) do
-    table.insert(branches, { cond = cond, block = block })
-  end
-
-  local else_block = body:match([[else%s*{%s*(.-)%s*}]])
-
-  for _, branch in ipairs(branches) do
-    if eval_condition(theme, branch.cond) then
-      execute_block(branch.block)
-      return true
-    end
-  end
-
-  if else_block then
-    execute_block(else_block)
-    return true
-  end
-
-  return false
-end
-
--- =========================
 -- Load theme
 -- =========================
 
-local theme_name = arg[1]
-if not theme_name then
-  error("Usage: apply-theme.lua <theme-name>")
-end
+local theme_name = arg[1] or error("Usage: apply-theme.lua <theme-name>")
+local theme_dir  = THEMES_DIR .. "/" .. theme_name
+local theme      = dofile(theme_dir .. "/theme.lua")
 
-local theme_dir = THEMES_DIR .. "/" .. theme_name
-local theme = dofile(theme_dir .. "/theme.lua")
+-- =========================
+-- Update theme symlink
+-- =========================
+
+symlink_force(theme_dir, THEMES_DIR .. "/current")
 
 -- =========================
 -- Process templates
@@ -236,54 +253,52 @@ local theme = dofile(theme_dir .. "/theme.lua")
 
 local handle = io.popen("ls " .. TEMPLATES_DIR)
 for template_name in handle:lines() do
-  local generic_path  = TEMPLATES_DIR .. "/" .. template_name
-  local override_path = theme_dir .. "/" .. template_name
+  local override = theme_dir .. "/" .. template_name
+  local generic  = TEMPLATES_DIR .. "/" .. template_name
+  local path     = read_file(override) and override or generic
 
-  local template_path =
-      read_file(override_path) and override_path or generic_path
-
-  local content       = read_file(template_path)
+  local content  = read_file(path)
   if not content then goto continue end
 
   local header, body = content:match("^(.-)\n(.*)")
   if not header then goto continue end
 
   local paths_part, command = header:match("^(.-)::(.*)$")
-  if not command then
-    io.stderr:write("Invalid header in " .. template_name .. "\n")
-    goto continue
-  end
-
-  paths_part  = trim(paths_part or "")
-  command     = trim(command)
-
-  local paths = {}
-  if paths_part ~= "" then
-    for p in paths_part:gmatch("%S+") do
-      table.insert(paths, p)
-    end
-  end
+  if not command then goto continue end
 
   local final = apply_keys(body, theme)
 
-  -- Write files
-  for _, path in ipairs(paths) do
-    path = path:gsub("^~", HOME)
-    write_file(path, final)
-    print("Written:       ", path)
+  for p in (paths_part or ""):gmatch("%S+") do
+    p = p:gsub("^~", HOME)
+    write_file(p, final)
+    print("Written:", p)
   end
 
-  -- Conditional command block
-  if command:match("^if%s+") then
-    execute_conditional_commands(command .. "\n" .. final, theme)
-    goto continue
-  end
-
-  -- Normal command
+  command = trim(command)
   if command ~= "" then
-    print("Executing:     ", command)
+    print("Executing:", command)
     os.execute(command)
   end
 
   ::continue::
+end
+
+-- =========================
+-- Wallpaper handling
+-- =========================
+
+local bg_dir     = theme_dir .. "/backgrounds"
+local current_bg = bg_dir .. "/current"
+
+if exists(bg_dir) then
+  if not exists(current_bg) then
+    local files = list_files(bg_dir)
+    if #files > 0 then
+      symlink_force(bg_dir .. "/" .. files[1], current_bg)
+    end
+  end
+
+  if exists(current_bg) then
+    os.execute(string.format("swww img %q", current_bg))
+  end
 end
