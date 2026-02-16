@@ -1,7 +1,7 @@
 custom-shader = shaders/cursor_tail.glsl
 theme = themed
 
-font-family = JetbrainsMono Nerd Font Propo
+font-family = JetbrainsMono Nerd Font Mono
 font-size = 10.0
 
 window-padding-x = 4

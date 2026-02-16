@@ -19,6 +19,7 @@
   border-radius: {{ rounding }};
 }
 
+.modules-center,
 .modules-left,
 .modules-right {
   margin: {{ spacing }} 4;

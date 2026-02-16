@@ -1,19 +1,19 @@
-~/.config/gtk-3.0/themed.css ~/.config/gtk-4.0/themed.css
+~/.config/gtk-3.0/themed.css ~/.config/gtk-4.0/themed.css ::
 
 @define-color accent_color {{ accent }};
 @define-color accent_bg_color {{ bg }};
 @define-color accent_fg_color {{ fg }};
 
 @define-color destructive_bg_color {{ c1 }};
-@define-color destructive_fg_color {{ bg0 }};
+@define-color destructive_fg_color {{ bg }};
 
 @define-color error_bg_color {{ c1 }};
-@define-color error_fg_color {{ bg0 }};
+@define-color error_fg_color {{ bg }};
 
-@define-color window_bg_color {{ bg0 }};
+@define-color window_bg_color {{ bg }};
 @define-color window_fg_color {{ fg }};
 
-@define-color view_bg_color {{ bg0 }};
+@define-color view_bg_color {{ bg }};
 @define-color view_fg_color {{ fg }};
 
 @define-color headerbar_bg_color {{ bg }};
@@ -26,7 +26,7 @@
 @define-color card_bg_color {{ c0 }};
 @define-color card_fg_color {{ fg }};
 
-@define-color dialog_bg_color {{ bg0 }};
+@define-color dialog_bg_color {{ bg }};
 @define-color dialog_fg_color {{ fg }};
 
 @define-color overview_bg_color {{ c0 }};

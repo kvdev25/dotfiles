@@ -1,10 +1,10 @@
-@define-color fg #cdd6f4;
-@define-color bg #1e1e2e;
-@define-color bg0 #11111b;
-@define-color c1 #f38ba8;
-@define-color c2 #a6e3a1;
-@define-color fg_selection #585b70;
-@define-color bg_selection #cdd6f4;
+@define-color fg #ebdbb2;
+@define-color bg #282828;
+@define-color bg0 #1d2021;
+@define-color c1 #cc241d;
+@define-color c2 #98971a;
+@define-color fg_selection #ebdbb2;
+@define-color bg_selection #665c54;
 
 .modules-left,
 .modules-right,
@@ -18,6 +18,7 @@
   border-radius: 20;
 }
 
+.modules-center,
 .modules-left,
 .modules-right {
   margin: 8 4;

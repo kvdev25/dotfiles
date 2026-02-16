@@ -1,5 +1,0 @@
-[config]
-
-[templates.matugen]
-input_path = "templates/matugen.json"
-output_path = "themes/dynamic.json"
