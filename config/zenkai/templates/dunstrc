@@ -1,0 +1,13 @@
+~/.config/dunst/dunstrc :: dunstctl reload
+[global]
+
+frame_width = {{ thickness }}
+progress_bar_corner_radius = {{ rounding }}
+progress_bar_frame_width = 0
+gap_size = {{ spacing }}
+font = "NotoSans Nerd Font Propo 10"
+corner_radius = {{ rounding }}
+frame_color = "{{ accent }}"
+background = "{{ bg0 }}"
+foreground = "{{ fg }}"
+highlight = "{{ accent }}"

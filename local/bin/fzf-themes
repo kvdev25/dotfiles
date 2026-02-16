@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+
+themes_dir="$HOME/.config/kv/themes/"
+theme=$1
+ln -sf "$themes_dir/$theme" "$themes_dir/current"
+
+wallpaper="${themes_dir}/${theme}/backgrounds/current"
+
+if [[ ! -f $wallpaper ]]; then
+  random_wallpaper=$(ls $(dirname $wallpaper) | shuf -n 1)
+  ln -sf "$random_wallpaper" "$wallpaper"
+fi
+
+swww img "$wallpaper"
+themer "$theme"

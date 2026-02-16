@@ -1,0 +1,304 @@
+#!/usr/bin/env lua
+
+-- =========================
+-- Paths
+-- =========================
+
+local XDG_CONFIG_HOME = os.getenv("XDG_CONFIG_HOME")
+if not XDG_CONFIG_HOME then
+  error("XDG_CONFIG_HOME is not set")
+end
+
+local THEMES_DIR    = XDG_CONFIG_HOME .. "/kv/themes"
+local TEMPLATES_DIR = XDG_CONFIG_HOME .. "/kv/templates"
+local HOME          = os.getenv("HOME")
+
+-- =========================
+-- Helpers
+-- =========================
+
+local function trim(s)
+  return s:match("^%s*(.-)%s*$")
+end
+
+local function clamp(v, min, max)
+  return math.max(min, math.min(max, v))
+end
+
+local function read_file(path)
+  local f = io.open(path, "r")
+  if not f then return nil end
+  local content = f:read("*a")
+  f:close()
+  return content
+end
+
+local function write_file(path, content)
+  local dir = path:match("(.+)/")
+  if dir then
+    os.execute(string.format("mkdir -p %q", dir))
+  end
+  local f = assert(io.open(path, "w"))
+  f:write(content)
+  f:close()
+end
+
+local function exists(path)
+  return os.execute(string.format("test -e %q", path)) == 0
+end
+
+local function symlink_force(target, link)
+  os.execute(string.format("ln -sfn %q %q", target, link))
+end
+
+local function list_files(dir)
+  local files = {}
+  local p = io.popen("ls -1 " .. dir .. " 2>/dev/null")
+  if not p then return files end
+  for f in p:lines() do
+    if f ~= "current" then
+      table.insert(files, f)
+    end
+  end
+  p:close()
+  return files
+end
+
+-- =========================
+-- Theme key resolution
+-- =========================
+
+local function resolve_key(theme, key)
+  local value = theme
+  for part in key:gmatch("[^.]+") do
+    if type(value) ~= "table" then return nil end
+    value = value[part]
+    if value == nil then return nil end
+  end
+  return value
+end
+
+-- =========================
+-- Value resolution
+-- =========================
+
+local function resolve_value(theme, expr)
+  expr = trim(expr)
+
+  if expr == "true" then return true end
+  if expr == "false" then return false end
+
+  local num = tonumber(expr)
+  if num then return num end
+
+  local str = expr:match([[^"(.*)"$]]) or expr:match([[^'(.*)'$]])
+  if str then return str end
+
+  if expr:match("^#?[%x]+$") and (#expr == 6 or #expr == 7) then
+    return expr
+  end
+
+  for key in expr:gmatch("[^|]+") do
+    key = trim(key)
+    local val = resolve_key(theme, key)
+    if val ~= nil then return val end
+  end
+
+  return nil
+end
+
+-- =========================
+-- Color helpers
+-- =========================
+
+local function parse_hex(val)
+  if type(val) ~= "string" then return nil end
+  local hex = val:gsub("^#", "")
+  if not hex:match("^[%x]+$") or #hex ~= 6 then return nil end
+  return
+      tonumber(hex:sub(1, 2), 16),
+      tonumber(hex:sub(3, 4), 16),
+      tonumber(hex:sub(5, 6), 16)
+end
+
+local function rgb_to_hex(r, g, b)
+  return string.format("#%02x%02x%02x", r, g, b)
+end
+
+-- =========================
+-- Modifiers
+-- =========================
+
+local function apply_modifiers(val, mods)
+  for mod in mods:gmatch("[^:]+") do
+    mod = trim(mod)
+    local name, arg = mod:match("^(%w+)%((.-)%)$")
+    name = name or mod
+
+    if name == "upper" and type(val) == "string" then
+      val = val:upper()
+    elseif name == "lower" and type(val) == "string" then
+      val = val:lower()
+    elseif type(val) == "number" then
+      local n = tonumber(arg)
+
+      if name == "add" and n then
+        val = val + n
+      elseif name == "sub" and n then
+        val = val - n
+      elseif name == "mul" and n then
+        val = val * n
+      elseif name == "div" and n then
+        val = val / n
+      elseif name == "min" and n then
+        val = math.min(val, n)
+      elseif name == "max" and n then
+        val = math.max(val, n)
+      elseif name == "clamp" then
+        local a, b = arg:match("([^,]+),([^,]+)")
+        if a and b then
+          val = clamp(val, tonumber(a), tonumber(b))
+        end
+      elseif name == "round" then
+        val = math.floor(val + 0.5)
+      elseif name == "floor" then
+        val = math.floor(val)
+      elseif name == "ceil" then
+        val = math.ceil(val)
+      elseif name == "percent" then
+        val = tostring(val * 100) .. "%"
+      end
+    elseif name == "strip" and type(val) == "string" then
+      val = val:gsub("^#", "")
+    elseif name == "rgb" then
+      local r, g, b = parse_hex(val)
+      if r then val = string.format("%d, %d, %d", r, g, b) end
+    elseif name == "rgba" then
+      local a = tonumber(arg)
+      local r, g, b = parse_hex(val)
+      if r and a then
+        val = string.format("%d, %d, %d, %.3f", r, g, b, clamp(a, 0, 1))
+      end
+    elseif name == "hex" then
+      local a = tonumber(arg)
+      local r, g, b = parse_hex(val)
+      if r and a then
+        val = string.format(
+          "#%02x%02x%02x%02x",
+          r, g, b, math.floor(clamp(a, 0, 1) * 255)
+        )
+      end
+    elseif name == "lighten" or name == "darken" then
+      local amt = tonumber(arg)
+      local r, g, b = parse_hex(val)
+      if r and amt then
+        amt = clamp(amt, 0, 1)
+        local f = (name == "lighten") and (1 + amt) or (1 - amt)
+        val = rgb_to_hex(
+          clamp(math.floor(r * f), 0, 255),
+          clamp(math.floor(g * f), 0, 255),
+          clamp(math.floor(b * f), 0, 255)
+        )
+      end
+    else
+      io.stderr:write("Warning: unknown modifier :" .. mod .. "\n")
+    end
+  end
+
+  return val
+end
+
+-- =========================
+-- Template substitution
+-- =========================
+
+local function apply_keys(template, theme)
+  return template:gsub("{{(.-)}}", function(expr)
+    expr = trim(expr)
+
+    for raw in expr:gmatch("[^|]+") do
+      local part = trim(raw)
+      local value_expr, mods = part:match("^([^:]+):?(.*)$")
+      value_expr = trim(value_expr or "")
+      mods = trim(mods or "")
+
+      local val = resolve_value(theme, value_expr)
+      if val ~= nil then
+        return tostring(apply_modifiers(val, mods))
+      end
+    end
+
+    io.stderr:write("Warning: missing keys {" .. expr .. "}\n")
+    return ""
+  end)
+end
+
+-- =========================
+-- Load theme
+-- =========================
+
+local theme_name = arg[1] or error("Usage: apply-theme.lua <theme-name>")
+local theme_dir  = THEMES_DIR .. "/" .. theme_name
+local theme      = dofile(theme_dir .. "/theme.lua")
+
+-- =========================
+-- Update theme symlink
+-- =========================
+
+symlink_force(theme_dir, THEMES_DIR .. "/current")
+
+-- =========================
+-- Process templates
+-- =========================
+
+local handle = io.popen("ls " .. TEMPLATES_DIR)
+for template_name in handle:lines() do
+  local override = theme_dir .. "/" .. template_name
+  local generic  = TEMPLATES_DIR .. "/" .. template_name
+  local path     = read_file(override) and override or generic
+
+  local content  = read_file(path)
+  if not content then goto continue end
+
+  local header, body = content:match("^(.-)\n(.*)")
+  if not header then goto continue end
+
+  local paths_part, command = header:match("^(.-)::(.*)$")
+  if not command then goto continue end
+
+  local final = apply_keys(body, theme)
+
+  for p in (paths_part or ""):gmatch("%S+") do
+    p = p:gsub("^~", HOME)
+    write_file(p, final)
+    print("Written:", p)
+  end
+
+  command = trim(command)
+  if command ~= "" then
+    print("Executing:", command)
+    os.execute(command)
+  end
+
+  ::continue::
+end
+
+-- =========================
+-- Wallpaper handling
+-- =========================
+
+local bg_dir     = theme_dir .. "/backgrounds"
+local current_bg = bg_dir .. "/current"
+
+if exists(bg_dir) then
+  if not exists(current_bg) then
+    local files = list_files(bg_dir)
+    if #files > 0 then
+      symlink_force(bg_dir .. "/" .. files[1], current_bg)
+    end
+  end
+
+  if exists(current_bg) then
+    os.execute(string.format("swww img %q", current_bg))
+  end
+end

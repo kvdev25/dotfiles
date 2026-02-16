@@ -1,9 +1,10 @@
 {
   "layer": "top",
-  "spacing": 18,
+  "position": "left",
+  "spacing": 0,
   "reload_style_on_change": false,
-  "modules-left": [ "hyprland/workspaces", "hyprland/submap" ],
-  "modules-center": [ "clock" ],
+  "modules-left": [ "niri/workspaces", "niri/submap" ],
+  "modules-center": [ "clock", "clock#2" ],
   "modules-right": [ "network", "bluetooth", "pulseaudio", "battery" ],
 
   "hyprland/workspaces": {
@@ -49,5 +50,13 @@
     "format-icons": ["󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"],
     "format-charging": "{icon}󱐋",
     "on-click": "fzf-power-profiles-menu"
+  },
+
+  "clock": {
+    "format": "{:%H}"
+  },
+
+  "clock#2": {
+    "format": "{:%M}"
   }
 }

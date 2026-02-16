@@ -1,0 +1,59 @@
+// "/-" comments out the following node.
+
+include "binds.kdl"
+include "themed.kdl"
+
+spawn-at-startup "dunst"
+spawn-at-startup "waybar"
+spawn-at-startup "swww-daemon"
+spawn-at-startup "wl-paste --watch cliphist store"
+spawn-at-startup "systemctl --user start elephant.service"
+spawn-at-startup "walker --gapplication-service"
+
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+prefer-no-csd
+
+output "eDP-1" {
+  mode "2560x1600"
+  scale 1.25
+}
+
+layout {
+  gaps 8
+  center-focused-column "always"
+  preset-column-widths {
+    proportion 0.33333
+    proportion 0.5
+    proportion 0.66667
+  }
+  default-column-width { proportion 0.7; }
+
+  focus-ring {
+    on
+  }
+}
+
+hotkey-overlay {
+  skip-at-startup
+}
+
+window-rule {
+  geometry-corner-radius 12
+  clip-to-geometry true
+}
+
+input {
+  keyboard {
+    repeat-delay 200
+    numlock
+  }
+
+  touchpad {
+    tap
+    natural-scroll
+  }
+}
+
+animations {
+  slowdown 0.5
+}

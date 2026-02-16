@@ -1,5 +1,5 @@
 custom-shader = shaders/cursor_tail.glsl
-theme = Matugen
+theme = themed
 
 font-family = JetbrainsMono Nerd Font Propo
 font-size = 10.0

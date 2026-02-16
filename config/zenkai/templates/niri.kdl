@@ -1,0 +1,9 @@
+~/.config/niri/themed.kdl
+
+layout {
+  focus-ring {
+    width {{ thickness }}
+    active-color "{{ accent }}"
+    inactive-color "{{ bg }}"
+  }
+}

@@ -8,5 +8,5 @@ fi
 file=$(fd fzf ~/.local/bin/ | fzf --style=minimal --delimiter="fzf-" --with-nth=2)
 [[ -f "$file" ]] || exit
 
-setsid $(realpath "$file") &
+setsid "$file" &
 sleep 0

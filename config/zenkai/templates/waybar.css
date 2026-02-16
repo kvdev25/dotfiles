@@ -1,0 +1,25 @@
+~/.config/waybar/themed.css :: pkill -SIGUSR2 waybar
+@define-color fg {{ fg }};
+@define-color bg {{ bg }};
+@define-color bg0 {{ bg0 }};
+@define-color c1 {{ c1 }};
+@define-color c2 {{ c2 }};
+@define-color fg_selection {{ fg_selection }};
+@define-color bg_selection {{ bg_selection }};
+
+.modules-left,
+.modules-right,
+.modules-center,
+#workspaces button:hover,
+#clock:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#battery:hover,
+#network:hover {
+  border-radius: {{ rounding }};
+}
+
+.modules-left,
+.modules-right {
+  margin: {{ spacing }} 4;
+}

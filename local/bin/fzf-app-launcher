@@ -7,8 +7,7 @@ fi
 
 app=$(
   fd -H -e desktop . /usr/share/applications ~/.local/share/applications -0 |
-    xargs -0 -n1 basename |
-    sed 's/\.desktop//' |
+    xargs -0 -n1 basename --suffix .desktop |
     fzf --style=minimal
 )
 [[ $app ]] || exit
