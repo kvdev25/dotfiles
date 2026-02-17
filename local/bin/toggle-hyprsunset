@@ -1,3 +1,0 @@
-#! /usr/bin/env bash
-
-pkill hyprsunset || setsid hyprsunset -t 2500

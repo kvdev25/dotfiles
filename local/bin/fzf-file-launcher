@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
-if [[ -z "${IN_GHOSTTY_FLOAT:-}" ]]; then
-  export IN_GHOSTTY_FLOAT=1
-  exec open-ghostty -fs "$(realpath "$0")" "$@"
+if [[ -z "$PICKER_OPENED" ]]; then
+  export PICKER_OPENED=1
+  xdg-terminal-exec "$0" "$@"
 fi
 
 file=$(fd -H . / | fzf --style=minimal)

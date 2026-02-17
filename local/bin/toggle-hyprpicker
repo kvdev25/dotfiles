@@ -1,3 +1,0 @@
-#! /usr/bin/env bash
-
-pkill hyprpicker || setsid hyprpicker | wl-copy

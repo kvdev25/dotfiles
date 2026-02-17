@@ -2,11 +2,14 @@ binds {
   Mod+Shift+Slash { show-hotkey-overlay; }
 
   Mod+Return  hotkey-overlay-title="Open Ghostty"     { spawn "ghostty"; }
-  Mod+Space   hotkey-overlay-title="Open Walker"      { spawn "walker"; }
+  Mod+Space   hotkey-overlay-title="Open Launcher"      { spawn "fzf-app-launcher"; }
   Mod+Shift+B hotkey-overlay-title="Open Zen Browser" { spawn "zen-browser"; }
   Mod+Shift+F hotkey-overlay-title="Open Nautilus"    { spawn "nautilus"; }
   Mod+Shift+W hotkey-overlay-title="Toggle Waybar"    { spawn-sh "pkill waybar || waybar"; }
   Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh "zkcli wallpaper choose"; }
+  Mod+Ctrl+Space hotkey-overlay-title="Select Theme" { spawn-sh "zkcli theme choose"; }
+
+  Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn-sh "fzf-clipboard"; }
 
   XF86AudioMicMute      allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
   XF86AudioPlay         allow-when-locked=true { spawn-sh "playerctl play-pause"; }

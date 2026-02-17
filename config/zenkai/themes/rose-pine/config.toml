@@ -1,0 +1,34 @@
+mode = "dark"
+fg = "#e0def4"
+bg = "#1f1d2e"
+bg0 = "#191724"
+accent = "#eb6f92"
+cursor = "#e0def4"
+cursor_text = "#191724"
+fg_selection = "#524f67"
+bg_selection = "#e0def4"
+
+c0 = "#26233a"
+c1 = "#eb6f92"
+c2 = "#31748f"
+c3 = "#f6c177"
+c4 = "#9ccfd8"
+c5 = "#c4a7e7"
+c6 = "#ebbcba"
+c7 = "#e0def4"
+c8 = "#6e6a86"
+c9 = "#eb6f92"
+c10 = "#31748f"
+c11 = "#f6c177"
+c12 = "#9ccfd8"
+c13 = "#c4a7e7"
+c14 = "#ebbcba"
+c15 = "#e0def4"
+
+thickness = 3
+rounding = 20
+spacing = 8
+
+[opacity]
+active = 1
+inactive = 1

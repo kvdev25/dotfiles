@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+files=$(fd -H . / | sed 's|^|file: |')
+apps=$(fd -e desktop . /usr/share/applications ~/.local/share/applications | xargs -n1 basename | sed 's|\.desktop||' | sed 's|^|app: |')
+choices=$(printf "%s\n%s\n%s\n%s\n" "$files" "$apps")
+selection=$($choices | fzf --preview='fzf-preview {1}')
+
+case "$selection" in
+file:*)
+  filepath="${selection#file: }"
+  xdg-open "$filepath"
+  ;;
+app:*)
+  app="${selection#app: }"
+  gtk-launch "$app" || "$app" &
+  ;;
+esac

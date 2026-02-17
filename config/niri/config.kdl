@@ -1,7 +1,7 @@
 // "/-" comments out the following node.
 
 include "binds.kdl"
-include "themed.kdl"
+include "zenkai.kdl"
 
 spawn-at-startup "dunst"
 spawn-at-startup "waybar"
@@ -19,7 +19,6 @@ output "eDP-1" {
 }
 
 layout {
-  gaps 8
   center-focused-column "always"
   preset-column-widths {
     proportion 0.33333
@@ -40,6 +39,11 @@ hotkey-overlay {
 window-rule {
   geometry-corner-radius 12
   clip-to-geometry true
+}
+
+window-rule {
+  match app-id="term.floating"
+  open-floating true
 }
 
 input {

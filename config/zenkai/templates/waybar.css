@@ -1,7 +1,8 @@
-~/.config/waybar/themed.css :: pkill -SIGUSR2 waybar
+~/.config/waybar/zenkai.css :: pkill -SIGUSR2 waybar
 @define-color fg {{ fg }};
 @define-color bg {{ bg }};
 @define-color bg0 {{ bg0 }};
+@define-color c0 {{ c0 }};
 @define-color c1 {{ c1 }};
 @define-color c2 {{ c2 }};
 @define-color fg_selection {{ fg_selection }};

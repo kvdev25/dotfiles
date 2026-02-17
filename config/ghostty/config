@@ -1,5 +1,5 @@
 custom-shader = shaders/cursor_tail.glsl
-theme = themed
+theme = zenkai
 
 font-family = JetbrainsMono Nerd Font Mono
 font-size = 10.0

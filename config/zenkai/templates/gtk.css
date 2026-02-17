@@ -1,4 +1,4 @@
-~/.config/gtk-3.0/themed.css ~/.config/gtk-4.0/themed.css ::
+~/.config/gtk-3.0/gtk.css ~/.config/gtk-4.0/gtk.css ::
 
 @define-color accent_color {{ accent }};
 @define-color accent_bg_color {{ bg }};
@@ -32,12 +32,12 @@
 @define-color overview_bg_color {{ c0 }};
 @define-color overview_fg_color {{ fg }};
 
-@define-color sidebar_bg_color {{ bg }};
+@define-color sidebar_bg_color {{ bg0 }};
 @define-color sidebar_fg_color {{ fg }};
 @define-color sidebar_backdrop_color @sidebar_bg_color;
 @define-color sidebar_border_color @window_bg_color;
 
-@define-color secondary_sidebar_bg_color {{ bg }};
+@define-color secondary_sidebar_bg_color {{ bg0 }};
 @define-color secondary_sidebar_fg_color {{ fg }};
 
 /* Backdrop/unfocused states */

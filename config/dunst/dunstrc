@@ -3,7 +3,7 @@
 frame_width = 2
 progress_bar_corner_radius = 20
 progress_bar_frame_width = 0
-gap_size = 8
+gap_size = 18
 font = "NotoSans Nerd Font Propo 10"
 corner_radius = 20
 frame_color = "#458588"

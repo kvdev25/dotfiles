@@ -1,6 +1,7 @@
-~/.config/niri/themed.kdl ::
+~/.config/niri/zenkai.kdl ::
 
 layout {
+  gaps {{ spacing }}
   focus-ring {
     width {{ thickness }}
     active-color "{{ accent }}"

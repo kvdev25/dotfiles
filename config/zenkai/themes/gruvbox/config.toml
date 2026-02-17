@@ -27,7 +27,7 @@ c15 = "#ebdbb2"
 
 thickness = 2
 rounding = 20
-spacing = 8
+spacing = 18
 
 [opacity]
 active = 1
